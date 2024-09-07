@@ -86,3 +86,7 @@ This project is designed to be comprehensive, allowing even those with little pr
   sqlc version
   sqlc generate 
 ```
+
+## testify
+
+[testify](https://github.com/stretchr/testify)
