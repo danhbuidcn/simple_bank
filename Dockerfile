@@ -1,12 +1,14 @@
 # Sử dụng hình ảnh Go chính thức
-FROM golang:1.20-alpine
+FROM golang:1.22-alpine
 
-# Cài đặt make
-RUN apk add --no-cache make
-# Cài đặt psql
-RUN apk update && apk add postgresql-client
+# Cài đặt make và postgresql-client
+RUN apk add --no-cache make postgresql-client gcc musl-dev
+
 # Cài đặt Go migration tool
 RUN go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
+
+# Đảm bảo thư mục Go bin đã có trong PATH
+ENV PATH=$PATH:/go/bin
 
 # Thiết lập thư mục làm việc bên trong container
 WORKDIR /app

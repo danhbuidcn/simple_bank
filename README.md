@@ -60,3 +60,29 @@ This project is designed to be comprehensive, allowing even those with little pr
   go mod init simple_bank
   go mod tidy
   ```
+
+##  Install package
+
+```
+  docker exec -it go_app /bin/sh
+
+  go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
+  go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
+
+```
+
+### golang-migrate
+
+- [docs](https://github.com/golang-migrate/migrate/tree/master/cmd/migrate)
+
+### sqlc
+
+- [docs](https://docs.sqlc.dev/en/stable/overview/install.html) 
+- You can also use [gorm](https://gorm.io/docs/) instead.
+
+```
+  docker exec -it go_app /bin/sh
+
+  sqlc version
+  sqlc generate 
+```
