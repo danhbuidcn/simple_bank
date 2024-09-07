@@ -4,11 +4,11 @@ createdb:
 
 # Chạy các migration trực tiếp từ container go_app
 migrateup:
-	migrate -path=/app/db/migrations -database postgres://$(DB_USER):$(DB_PASSWORD)@$(DB_HOST):$(DB_PORT)/$(DB_NAME)?sslmode=disable up
+	migrate -path=/app/db/migration -database postgres://$(DB_USER):$(DB_PASSWORD)@$(DB_HOST):$(DB_PORT)/$(DB_NAME)?sslmode=disable up
 
 # Rollback 1 migrate gần nhất
 migratedown:
-	migrate -path=/app/db/migrations -database postgres://$(DB_USER):$(DB_PASSWORD)@$(DB_HOST):$(DB_PORT)/$(DB_NAME)?sslmode=disable down 1
+	migrate -path=/app/db/migration -database postgres://$(DB_USER):$(DB_PASSWORD)@$(DB_HOST):$(DB_PORT)/$(DB_NAME)?sslmode=disable down 1
 
 # Xóa cơ sở dữ liệu trực tiếp từ container go_app
 dropdb:
@@ -18,4 +18,7 @@ dropdb:
 sqlc:
 	sqlc generate
 
-.PHONY: createdb dropdb migrateup migratedown sqlc
+test:
+	go test -v -cover ./...
+
+.PHONY: createdb dropdb migrateup migratedown sqlc test
