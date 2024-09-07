@@ -51,8 +51,9 @@ This project is designed to be comprehensive, allowing even those with little pr
 - Migrate db
   ```
   docker exec -it go_app /bin/sh
-  make create-db
-  make migrate
+  # make createdb
+  # make migrateup
+  # make test
   ```
 
 - Initialize the module and install some packages
