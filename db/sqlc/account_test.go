@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/stretchr/testify/require"
 	"github.com/jackc/pgx/v5"
+	"github.com/stretchr/testify/require"
 )
 
 // tạo một tài khoản ngẫu nhiên

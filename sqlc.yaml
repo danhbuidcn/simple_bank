@@ -9,5 +9,5 @@ sql:
       go:
         package: "db"  # Tên package Go mà SQLC tạo ra
         out: "./db/sqlc"  # Đường dẫn tới nơi SQLC sẽ sinh mã Go
-        sql_package: "pgx/v5"  # Sử dụng driver PostgreSQL với pgx v5
+        sql_package: "database/sql"  # database/sql thay vì pgx v5
         emit_json_tags: true  # Thêm các JSON tags vào struct Go
