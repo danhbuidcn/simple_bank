@@ -1,40 +1,49 @@
 package db
 
 import (
-	"context"
-	"log"
+	"database/sql"
 	"fmt"
+	"log"
 	"os"
 	"testing"
 
-	"github.com/jackc/pgx/v5/pgxpool" // cung cấp quản lý pool kết nối giúp quản lý nhiều kết nối đến cơ sở dữ liệu hiệu quả hơn.
+	_ "github.com/lib/pq" // Import PostgreSQL driver
 )
 
-// Biến toàn cục cho dbSource
+// Global variable for dbSource
 var dbSource string
 var testQueries *Queries
 
 func init() {
-	// Lấy thông tin kết nối từ biến môi trường và khởi tạo dbSource
+	// Get connection information from environment variables and initialize dbSource
 	dbUser := os.Getenv("DB_USER")
 	dbPassword := os.Getenv("DB_PASSWORD")
 	dbHost := os.Getenv("DB_HOST")
 	dbPort := os.Getenv("DB_PORT")
 	dbName := os.Getenv("DB_NAME")
 
-	// Khởi tạo giá trị dbSource
+	// Initialize dbSource value
 	dbSource = fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", dbUser, dbPassword, dbHost, dbPort, dbName)
 }
 
 func TestMain(m *testing.M) {
-	// Kết nối cơ sở dữ liệu bằng pgxpool
-  conn, err := pgxpool.New(context.Background(), dbSource)
+	// Connect to the database using database/sql
+	conn, err := sql.Open("postgres", dbSource)
 	if err != nil {
 		log.Fatal("cannot connect to db:", err)
 	}
 
+	// Ensure that the connection is successful
+	if err := conn.Ping(); err != nil {
+		log.Fatal("cannot ping db:", err)
+	}
+
 	testQueries = New(conn)
 
-	// Chạy các test
-	os.Exit(m.Run()) // chạy các test có tiền tố Test và thoát với mã thoát 0:success, 1:fail
+	// Run the tests
+	code := m.Run() // run tests with Test prefix
+	if err := conn.Close(); err != nil {
+		log.Fatal("cannot close db connection:", err)
+	}
+	os.Exit(code) // Exit with code 0: success, 1: fail
 }
