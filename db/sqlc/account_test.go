@@ -2,13 +2,13 @@ package db
 
 import (
 	"context"
+	"database/sql"
 	"testing"
 
-	"github.com/jackc/pgx/v5"
 	"github.com/stretchr/testify/require"
 )
 
-// tạo một tài khoản ngẫu nhiên
+// Create a random account
 func createRandomAccount(t *testing.T) Account {
 	arg := CreateAccountParams{
 		Owner:    "tom",
@@ -30,14 +30,14 @@ func createRandomAccount(t *testing.T) Account {
 	return account
 }
 
-// kiểm tra việc tạo một tài khoản
+// Test creating an account
 func TestCreateAccount(t *testing.T) {
 	createRandomAccount(t)
 }
 
-// kiểm tra tạo tài khoản với dữ liệu không hợp lệ
+// Test creating an account with invalid data
 // func TestCreateAccountInvalidCurrency(t *testing.T) {
-// 	// Tạo tài khoản với mã tiền tệ không hợp lệ
+// 	// Create an account with an invalid currency code
 // 	arg := CreateAccountParams{
 // 		Owner:    "tom",
 // 		Balance:  100,
@@ -48,7 +48,7 @@ func TestCreateAccount(t *testing.T) {
 // 	require.Error(t, err)
 // }
 
-// kiểm tra việc lấy thông tin tài khoản
+// Test retrieving account information
 func TestGetAccount(t *testing.T) {
 	account := createRandomAccount(t)
 	expected_account, err := testQueries.GetAccount(context.Background(), account.ID)
@@ -62,14 +62,14 @@ func TestGetAccount(t *testing.T) {
 	require.Equal(t, account.CreatedAt, expected_account.CreatedAt)
 }
 
-// kiểm tra việc lấy thông tin tài khoản không tồn tại
+// Test retrieving a non-existing account
 func TestGetAccountNotFound(t *testing.T) {
 	_, err := testQueries.GetAccount(context.Background(), 999999)
 	require.Error(t, err)
-	require.EqualError(t, err, pgx.ErrNoRows.Error())
+	require.EqualError(t, err, sql.ErrNoRows.Error()) // Change to sql.ErrNoRows
 }
 
-// TestUpdateAccount kiểm tra việc cập nhật tài khoản.
+// Test updating an account
 func TestUpdateAccount(t *testing.T) {
 	account := createRandomAccount(t)
 
@@ -89,7 +89,7 @@ func TestUpdateAccount(t *testing.T) {
 	require.Equal(t, account.CreatedAt, expected_account.CreatedAt)
 }
 
-// kiểm tra cập nhật tài khoản không tồn tại
+// Test updating a non-existing account
 func TestUpdateAccountNotFound(t *testing.T) {
 	arg := UpdateAccountParams{
 		ID:      999999,
@@ -98,10 +98,10 @@ func TestUpdateAccountNotFound(t *testing.T) {
 
 	_, err := testQueries.UpdateAccount(context.Background(), arg)
 	require.Error(t, err)
-	require.EqualError(t, err, pgx.ErrNoRows.Error())
+	require.EqualError(t, err, sql.ErrNoRows.Error()) // Change to sql.ErrNoRows
 }
 
-// kiểm tra việc xóa tài khoản
+// Test deleting an account
 func TestDeleteAccount(t *testing.T) {
 	account := createRandomAccount(t)
 	err := testQueries.DeleteAccount(context.Background(), account.ID)
@@ -109,17 +109,17 @@ func TestDeleteAccount(t *testing.T) {
 
 	expected_account, err := testQueries.GetAccount(context.Background(), account.ID)
 	require.Error(t, err)
-	require.EqualError(t, err, pgx.ErrNoRows.Error())
+	require.EqualError(t, err, sql.ErrNoRows.Error()) // Change to sql.ErrNoRows
 	require.Empty(t, expected_account)
 }
 
-// kiểm tra xóa tài khoản không tồn tại
+// Test deleting a non-existing account
 func TestDeleteAccountNotFound(t *testing.T) {
 	err := testQueries.DeleteAccount(context.Background(), 999999)
 	require.NoError(t, err)
 }
 
-// kiểm tra việc liệt kê danh sách tài khoản
+// Test listing accounts
 func TestListAccounts(t *testing.T) {
 	for i := 0; i < 10; i++ {
 		createRandomAccount(t)
@@ -139,7 +139,7 @@ func TestListAccounts(t *testing.T) {
 	}
 }
 
-// kiểm tra danh sách tài khoản khi không có kết quả
+// Test listing accounts when there are no results
 func TestListAccountsNoResults(t *testing.T) {
 	arg := ListAccountsParams{
 		Limit:  5,
