@@ -13,6 +13,7 @@ import (
 // Global variable for dbSource
 var dbSource string
 var testQueries *Queries
+var testDB *sql.DB
 
 func init() {
 	// Get connection information from environment variables and initialize dbSource
@@ -28,21 +29,22 @@ func init() {
 
 func TestMain(m *testing.M) {
 	// Connect to the database using database/sql
-	conn, err := sql.Open("postgres", dbSource)
+	var err error
+	testDB, err = sql.Open("postgres", dbSource)
 	if err != nil {
 		log.Fatal("cannot connect to db:", err)
 	}
 
 	// Ensure that the connection is successful
-	if err := conn.Ping(); err != nil {
+	if err := testDB.Ping(); err != nil {
 		log.Fatal("cannot ping db:", err)
 	}
 
-	testQueries = New(conn)
+	testQueries = New(testDB)
 
 	// Run the tests
 	code := m.Run() // run tests with Test prefix
-	if err := conn.Close(); err != nil {
+	if err := testDB.Close(); err != nil {
 		log.Fatal("cannot close db connection:", err)
 	}
 	os.Exit(code) // Exit with code 0: success, 1: fail
