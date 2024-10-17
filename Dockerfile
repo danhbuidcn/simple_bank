@@ -25,8 +25,6 @@ COPY . .
 # Build the application
 RUN go build -o /app/main .
 
-COPY db/migration ./db/migration
-
 # Specify the port that the application will use
 EXPOSE 8080
 
