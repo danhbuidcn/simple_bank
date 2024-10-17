@@ -1,13 +1,13 @@
 version: "2"
 cloud:
-  project: ""  # Nếu bạn không dùng SQLC Cloud, bạn có thể để trống hoặc xóa dòng này.
+  project: "" # If you are not using SQLC Cloud, you can leave this empty or remove this line.
 sql:
-  - engine: "postgresql"  # Định nghĩa hệ quản trị cơ sở dữ liệu đang sử dụng
-    schema: "./db/migration/"  # Thư mục chứa các file DDL (schema)
-    queries: "./db/query/"  # Thư mục chứa các câu truy vấn SQL
+  - engine: "postgresql" # Define the database management system being used
+    schema: "./db/migration/" # Directory containing DDL (schema) files
+    queries: "./db/query/" # Directory containing SQL queries
     gen:
       go:
-        package: "db"  # Tên package Go mà SQLC tạo ra
-        out: "./db/sqlc"  # Đường dẫn tới nơi SQLC sẽ sinh mã Go
-        sql_package: "database/sql"  # database/sql thay vì pgx v5
-        emit_json_tags: true  # Thêm các JSON tags vào struct Go
+        package: "db" # Name of the Go package that SQLC will generate
+        out: "./db/sqlc" # Path where SQLC will generate Go code
+        sql_package: "database/sql" # Use database/sql instead of pgx/v5
+        emit_json_tags: true # Add JSON tags to Go structs
