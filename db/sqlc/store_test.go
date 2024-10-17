@@ -71,10 +71,10 @@ func TestTransferTx(t *testing.T) {
 		// Check the 'from' account entry (for the sender)
 		fromEntry := result.FromEntry
 		require.NotEmpty(t, fromEntry)
-		require.Equal(t, account1.ID, fromEntry.AccountID)    // Verify sender's account ID
-		require.Equal(t, -amount, fromEntry.Amount)           // Ensure the transfer amount is negative for the sender
-		require.NotZero(t, fromEntry.ID)                      // Ensure entry ID is valid
-		require.NotZero(t, fromEntry.CreatedAt)               // Ensure entry creation timestamp is set
+		require.Equal(t, account1.ID, fromEntry.AccountID) // Verify sender's account ID
+		require.Equal(t, -amount, fromEntry.Amount)        // Ensure the transfer amount is negative for the sender
+		require.NotZero(t, fromEntry.ID)                   // Ensure entry ID is valid
+		require.NotZero(t, fromEntry.CreatedAt)            // Ensure entry creation timestamp is set
 
 		// Verify the 'from' account entry in the database
 		_, err = store.GetEntry(context.Background(), fromEntry.ID)
@@ -83,10 +83,10 @@ func TestTransferTx(t *testing.T) {
 		// Check the 'to' account entry (for the receiver)
 		toEntry := result.ToEntry
 		require.NotEmpty(t, toEntry)
-		require.Equal(t, account2.ID, toEntry.AccountID)      // Verify receiver's account ID
-		require.Equal(t, amount, toEntry.Amount)              // Ensure the transfer amount is positive for the receiver
-		require.NotZero(t, toEntry.ID)                        // Ensure entry ID is valid
-		require.NotZero(t, toEntry.CreatedAt)                 // Ensure entry creation timestamp is set
+		require.Equal(t, account2.ID, toEntry.AccountID) // Verify receiver's account ID
+		require.Equal(t, amount, toEntry.Amount)         // Ensure the transfer amount is positive for the receiver
+		require.NotZero(t, toEntry.ID)                   // Ensure entry ID is valid
+		require.NotZero(t, toEntry.CreatedAt)            // Ensure entry creation timestamp is set
 
 		// Verify the 'to' account entry in the database
 		_, err = store.GetEntry(context.Background(), toEntry.ID)
@@ -95,11 +95,11 @@ func TestTransferTx(t *testing.T) {
 		// Check the account balances
 		fromAccount := result.FromAccount
 		require.NotEmpty(t, fromAccount)
-		require.Equal(t, account1.ID, fromAccount.ID)         // Ensure it's the correct sender's account
+		require.Equal(t, account1.ID, fromAccount.ID) // Ensure it's the correct sender's account
 
 		toAccount := result.ToAccount
 		require.NotEmpty(t, toAccount)
-		require.Equal(t, account2.ID, toAccount.ID)           // Ensure it's the correct receiver's account
+		require.Equal(t, account2.ID, toAccount.ID) // Ensure it's the correct receiver's account
 
 		// Check the balances after the transaction
 		fmt.Println(">> tx:", fromAccount.Balance, toAccount.Balance)
@@ -142,4 +142,42 @@ func TestTransferTx(t *testing.T) {
 	require.Equal(t, account1.Balance-int64(n)*amount, updatedAccount1.Balance)
 	// Ensure the final balance for account2 is correct (original balance plus the total received amount)
 	require.Equal(t, account2.Balance+int64(n)*amount, updatedAccount2.Balance)
+}
+
+func TestTransferTxDeadlock(t *testing.T) {
+	store := NewStore(testDB)
+	account1 := createRandomAccount(t)
+	account2 := createRandomAccount(t)
+	fmt.Println(">> before:", account1.Balance, account2.Balance)
+	n := 10
+	amount := int64(10)
+	errs := make(chan error)
+	for i := 0; i < n; i++ {
+		fromAccountID := account1.ID
+		toAccountID := account2.ID
+		if i%2 == 1 {
+			fromAccountID = account2.ID
+			toAccountID = account1.ID
+		}
+		go func() {
+			_, err := store.TransferTx(context.Background(), TransferTxParams{
+				FromAccountID: fromAccountID,
+				ToAccountID:   toAccountID,
+				Amount:        amount,
+			})
+			errs <- err
+		}()
+	}
+	for i := 0; i < n; i++ {
+		err := <-errs
+		require.NoError(t, err)
+	}
+	// check the final updated balance
+	updatedAccount1, err := store.GetAccount(context.Background(), account1.ID)
+	require.NoError(t, err)
+	updatedAccount2, err := store.GetAccount(context.Background(), account2.ID)
+	require.NoError(t, err)
+	fmt.Println(">> after:", updatedAccount1.Balance, updatedAccount2.Balance)
+	require.Equal(t, account1.Balance, updatedAccount1.Balance)
+	require.Equal(t, account2.Balance, updatedAccount2.Balance)
 }
