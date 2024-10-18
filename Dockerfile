@@ -1,32 +1,32 @@
-# Sử dụng hình ảnh Go chính thức
+# Use the official Go image
 FROM golang:1.22-alpine
 
-# Cài đặt make và postgresql-client
+# Install make and postgresql-client
 RUN apk add --no-cache make postgresql-client gcc musl-dev
 
-# Cài đặt Go migration tool
+# Install the Go migration tool
 RUN go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
 
-# Đảm bảo thư mục Go bin đã có trong PATH
+# Ensure the Go bin directory is in PATH
 ENV PATH=$PATH:/go/bin
 
-# Thiết lập thư mục làm việc bên trong container
+# Set the working directory inside the container
 WORKDIR /app
 
-# Sao chép tệp go.mod và go.sum trước để tận dụng cache
+# Copy go.mod and go.sum first to take advantage of caching
 COPY go.mod go.sum ./
 
-# Cài đặt các phụ thuộc
+# Install dependencies
 RUN go mod tidy
 
-# Sao chép toàn bộ mã nguồn vào container
+# Copy the entire source code into the container
 COPY . .
 
-# Biên dịch ứng dụng
+# Build the application
 RUN go build -o /app/main .
 
-# Chỉ định cổng mà ứng dụng sẽ sử dụng
+# Specify the port that the application will use
 EXPOSE 8080
 
-# Chạy ứng dụng khi container khởi động
+# Run the application when the container starts
 CMD ["/app/main"]

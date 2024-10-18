@@ -1,23 +1,25 @@
-# Tạo cơ sở dữ liệu trực tiếp từ container go_app
+# Create the database directly from the go_app container
 createdb:
 	PGPASSWORD=$(DB_PASSWORD) psql -h $(DB_HOST) -U $(DB_USER) -d postgres -c "CREATE DATABASE $(DB_NAME);"
 
-# Chạy các migration trực tiếp từ container go_app
+# Run migrations directly from the go_app container
 migrateup:
 	migrate -path=/app/db/migration -database postgres://$(DB_USER):$(DB_PASSWORD)@$(DB_HOST):$(DB_PORT)/$(DB_NAME)?sslmode=disable up
 
-# Rollback 1 migrate gần nhất
+# Rollback the most recent migration
 migratedown:
 	migrate -path=/app/db/migration -database postgres://$(DB_USER):$(DB_PASSWORD)@$(DB_HOST):$(DB_PORT)/$(DB_NAME)?sslmode=disable down 1
 
-# Xóa cơ sở dữ liệu trực tiếp từ container go_app
+# Drop the database directly from the go_app container
 dropdb:
 	PGPASSWORD=$(DB_PASSWORD) psql -h $(DB_HOST) -U $(DB_USER) -d postgres -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname='$(DB_NAME)';"
 	PGPASSWORD=$(DB_PASSWORD) psql -h $(DB_HOST) -U $(DB_USER) -d postgres -c "DROP DATABASE $(DB_NAME);"
 
+# Generate SQL code using sqlc
 sqlc:
 	sqlc generate
 
+# Run tests
 test:
 	go test -v -cover ./...
 

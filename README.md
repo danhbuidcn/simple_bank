@@ -88,6 +88,51 @@ This project is designed to be comprehensive, allowing even those with little pr
   sqlc generate 
 ```
 
-## testify
+### testify
 
 [testify](https://github.com/stretchr/testify)
+
+## Commit History
+
+### Section 1: Working with database [Postgres + SQLC]
+  - **feat: initialize project and connect db**: 
+    - Initialized the project structure.
+    - Connected to the database using Docker for containerization.
+
+  - **feat: setup sqlc and implement CRUD with sqlc**: 
+    - Set up sqlc for generating Go code from SQL queries.
+    - Implemented CRUD operations using sqlc.
+
+  - **feat: add comprehensive tests for account operations**: 
+    - Wrote extensive tests for various account operations to ensure reliability.
+
+  - **feat: add comprehensive tests for account operations**: 
+    - Added more comprehensive tests for account operations.
+
+  - **feat: add CRUD entry and transfer**: 
+    - Added Create, Read, Update, Delete (CRUD) operations for entries and transfers.
+
+  - **feat: implement database transaction, transfers transaction**: 
+    - Implemented database transactions.
+    - Implemented transfer transactions.
+
+  - **feat: eliminate duplicate code and handle deadlocks**: 
+    - Removed duplicate code.
+    - Added handling for database deadlocks.
+
+  - **docs: deeply understand transaction isolation levels & read phenomena**: 
+    - Added documentation to deeply understand transaction isolation levels.
+    - Explained read phenomena.
+
+  - **feat: setup github actions for project**: 
+    - Set up GitHub Actions for continuous integration and deployment.
+
+### Section 2: Building RESTful HTTP JSON API [Gin + JWT + PASETO]
+
+### Section 3: Deploying the application to production [Docker + Kubernetes + AWS]
+
+### Section 4: Advance backend topics [Sessions + gRPC]
+
+### Section 5: Asynchronous processing with background workers [Asynq + Redis]
+
+### Section 6: Improve the stability and security of the server [PGX + RBAC + CORS]
