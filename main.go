@@ -2,31 +2,40 @@ package main
 
 import (
 	"log"
-	"simple_bank/app"
+	"simple_bank/api"
 	"simple_bank/config"
 	"simple_bank/database"
+
+	db "simple_bank/db/sqlc"
+
+	_ "github.com/lib/pq"
 )
 
 func main() {
 	// Load configuration
 	cfg := config.LoadConfig()
+	log.Println("=======================> Configuration loaded successfully")
 
 	// Connect to database
-	db, err := database.ConnectDB(cfg)
+	conn, err := database.ConnectDB(cfg)
 	if err != nil {
 		log.Fatalf("Could not connect to database: %v", err)
 	}
-	defer db.Close()
+	defer conn.Close()
+	log.Println("=======================> Connected to database successfully")
 
-	// // Perform migration
-	// if err := database.RunMigrations(db); err != nil {
-	//     log.Fatalf("Migration failed: %v", err)
-	// }
+	// Create database store
+	store := db.NewStore(conn)
+	log.Println("=======================> Database store created successfully")
 
-	// Start the application
-	router := app.SetupRouter()
-	log.Println("Application started.")
-	if err := router.Run(":8080"); err != nil {
+	// Create API server
+	server := api.NewServer(store)
+	log.Println("=======================> API server created successfully")
+
+	// Start server
+	err = server.Start(cfg.ServerAddress)
+	if err != nil {
 		log.Fatalf("Could not start server: %v", err)
 	}
+	log.Println("=======================> Server started successfully on", cfg.ServerAddress)
 }

@@ -1,6 +1,4 @@
 version: "2"
-cloud:
-  project: "" # If you are not using SQLC Cloud, you can leave this empty or remove this line.
 sql:
   - engine: "postgresql" # Define the database management system being used
     schema: "./db/migration/" # Directory containing DDL (schema) files

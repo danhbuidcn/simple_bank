@@ -2,7 +2,7 @@
 FROM golang:1.22-alpine
 
 # Install make and postgresql-client
-RUN apk add --no-cache make postgresql-client gcc musl-dev
+RUN apk add --no-cache make postgresql-client gcc musl-dev curl
 
 # Install the Go migration tool
 RUN go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
@@ -22,11 +22,8 @@ RUN go mod tidy
 # Copy the entire source code into the container
 COPY . .
 
-# Build the application
-RUN go build -o /app/main .
-
 # Specify the port that the application will use
-EXPOSE 8080
+EXPOSE 8081
 
 # Run the application when the container starts
-CMD ["/app/main"]
+CMD ["go", "run", "/app/main.go"]

@@ -1,0 +1,30 @@
+// install REST Client extension in VSCode
+@baseUrl=http://127.0.0.1:8081
+
+### health check
+GET {{baseUrl}}/health
+
+### Create Account
+POST {{baseUrl}}/accounts
+Content-Type: application/json
+
+{
+    "owner": "John Doe",
+    "currency": "USD"
+}
+
+### Get Account
+GET {{baseUrl}}/accounts/10
+
+### List Accounts
+GET http://localhost:8081/accounts?page_id=1&page_size=10
+
+### Create Transfers
+POST {{baseUrl}}/transfers
+Content-Type: application/json
+
+{
+    "from_account_id": 1,
+    "to_account_id": 2,
+    "amount": 100
+}

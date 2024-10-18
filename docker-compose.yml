@@ -19,13 +19,15 @@ services:
     env_file:
       - .env
     ports:
-      - "${APP_PORT}:8080"
+      - "${APP_PORT}:8081"
     depends_on:
       - db
     volumes:
-      - .:/app
+      - .:/app # Mount the current directory to /app
+      - go_mod_cache:/go/pkg/mod # Cache go modules
     stdin_open: true
     tty: true
 
 volumes:
   db_data:
+  go_mod_cache:

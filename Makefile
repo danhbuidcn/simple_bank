@@ -23,4 +23,5 @@ sqlc:
 test:
 	go test -v -cover ./...
 
+# Run the server in development mode
 .PHONY: createdb dropdb migrateup migratedown sqlc test

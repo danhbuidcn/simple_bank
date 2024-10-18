@@ -2,35 +2,26 @@ package db
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 	"os"
+	"simple_bank/config"
+	"simple_bank/database"
 	"testing"
 
 	_ "github.com/lib/pq" // Import PostgreSQL driver
 )
 
 // Global variable for dbSource
-var dbSource string
 var testQueries *Queries
 var testDB *sql.DB
 
-func init() {
-	// Get connection information from environment variables and initialize dbSource
-	dbUser := os.Getenv("DB_USER")
-	dbPassword := os.Getenv("DB_PASSWORD")
-	dbHost := os.Getenv("DB_HOST")
-	dbPort := os.Getenv("DB_PORT")
-	dbName := os.Getenv("DB_NAME")
-
-	// Initialize dbSource value
-	dbSource = fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", dbUser, dbPassword, dbHost, dbPort, dbName)
-}
-
 func TestMain(m *testing.M) {
-	// Connect to the database using database/sql
+	// Load configuration
+	cfg := config.LoadConfig()
+
+	// Connect to database
 	var err error
-	testDB, err = sql.Open("postgres", dbSource)
+	testDB, err = database.ConnectDB(cfg)
 	if err != nil {
 		log.Fatal("cannot connect to db:", err)
 	}

@@ -67,9 +67,9 @@ This project is designed to be comprehensive, allowing even those with little pr
 ```
   docker exec -it go_app /bin/sh
 
-  go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
-  go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
-
+  # go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
+  # go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
+  # go get -u github.com/gin-gonic/gin
 ```
 
 ### golang-migrate
@@ -128,6 +128,9 @@ This project is designed to be comprehensive, allowing even those with little pr
     - Set up GitHub Actions for continuous integration and deployment.
 
 ### Section 2: Building RESTful HTTP JSON API [Gin + JWT + PASETO]
+  - **feat: implement RESTful HTTP API in go using Gin**
+    - Developed RESTful HTTP APIs using the Gin framework.
+    - Implemented endpoints for creating accounts.
 
 ### Section 3: Deploying the application to production [Docker + Kubernetes + AWS]
 
