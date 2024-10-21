@@ -13,7 +13,7 @@ import (
 
 func main() {
 	// Load configuration
-	cfg := config.LoadConfig()
+	cfg := config.LoadConfig() // or config.LoadConfig(".")
 	log.Println("=======================> Configuration loaded successfully")
 
 	// Connect to database
