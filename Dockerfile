@@ -4,7 +4,7 @@ FROM golang:1.22-alpine
 # Install make and postgresql-client
 RUN apk add --no-cache make postgresql-client gcc musl-dev curl
 
-# Install the Go migration tool
+# Install golang-migrate with postgres tag
 RUN go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
 
 # Ensure the Go bin directory is in PATH

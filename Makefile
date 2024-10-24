@@ -23,5 +23,9 @@ sqlc:
 test:
 	go test -v -cover ./...
 
+# Generate mocks
+mock:
+	mockgen -package mockdb -destination db/mock/store.go simple_bank/db/sqlc Store
+
 # Run the server in development mode
-.PHONY: createdb dropdb migrateup migratedown sqlc test
+.PHONY: createdb dropdb migrateup migratedown sqlc test mock

@@ -70,6 +70,8 @@ This project is designed to be comprehensive, allowing even those with little pr
   # go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
   # go get -u github.com/gin-gonic/gin
   # go get github.com/spf13/viper
+  # go install github.com/golang/mock/mockgen@v1.6.0
+  # go get github.com/golang/mock/gomock
 ```
 
 ### golang-migrate
@@ -134,7 +136,11 @@ This project is designed to be comprehensive, allowing even those with little pr
   - **feat: load config from file & environment variables with viper**
     - [viper](https://github.com/spf13/viper)
     - Load config from `util/config.go` by viper
-  - **feat: mock DB for testing HTTP API in Go and achieve 100% coverage**
+  - **feat: mock DB for testing HTTP API in Go and achieve 100% coverage** (use [gomock](https://github.com/golang/mock))
+    - Isolate tests data to avoid conflicts
+    - Reduce a lot of time talking to the database
+    - Easy setup edge cases: unexpected errors
+    - Command: `make mock`
 
 ### Section 3: Deploying the application to production [Docker + Kubernetes + AWS]
 
