@@ -1,11 +1,17 @@
 # Use the official Go image
-FROM golang:1.22-alpine
+FROM golang:1.23-alpine
 
 # Install make and postgresql-client
 RUN apk add --no-cache make postgresql-client gcc musl-dev curl
 
 # Install golang-migrate with postgres tag
 RUN go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
+
+# Install sqlc
+RUN go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
+
+# Install air
+RUN go install github.com/air-verse/air@latest
 
 # Ensure the Go bin directory is in PATH
 ENV PATH=$PATH:/go/bin
@@ -25,5 +31,5 @@ COPY . .
 # Specify the port that the application will use
 EXPOSE 8081
 
-# Run the application when the container starts
-CMD ["go", "run", "/app/main.go"]
+# Run the application with air when the container starts
+CMD ["air"]

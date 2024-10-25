@@ -149,6 +149,8 @@ This project is designed to be comprehensive, allowing even those with little pr
       docker exec -it go_app /bin/sh
       # migrate create -ext sql -dir db/migration -seq add_users
       ```
+  - **feat: run the application with air when the container starts**
+    - Configured air to watch for changes and reload the application
 
 ### Section 3: Deploying the application to production [Docker + Kubernetes + AWS]
 

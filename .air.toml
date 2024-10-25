@@ -1,0 +1,9 @@
+[build]
+cmd = "go build -o ./tmp/main ."
+bin = "./tmp/main"
+full_bin = "APP_ENV=dev APP_PORT=8081 ./tmp/main"
+watch_dir = ["."]
+exclude_dir = ["tmp", "vendor"]
+include_ext = ["go", "tpl", "tmpl", "html"]
+exclude_ext = ["go.mod", "go.sum"]
+delay = 1000
