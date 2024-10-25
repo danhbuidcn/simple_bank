@@ -143,6 +143,12 @@ This project is designed to be comprehensive, allowing even those with little pr
     - Command: `make mock`
   - **feat: implement transfer money API with a custom params validator**
     - Added logic to validate currency and balance before performing transfer
+  - **feat: add users table with unique & foreign key constraints in PostgreSQL**
+    - Command
+      ```bash
+      docker exec -it go_app /bin/sh
+      # migrate create -ext sql -dir db/migration -seq add_users
+      ```
 
 ### Section 3: Deploying the application to production [Docker + Kubernetes + AWS]
 
