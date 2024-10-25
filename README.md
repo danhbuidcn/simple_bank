@@ -141,6 +141,8 @@ This project is designed to be comprehensive, allowing even those with little pr
     - Reduce a lot of time talking to the database
     - Easy setup edge cases: unexpected errors
     - Command: `make mock`
+  - **feat: implement transfer money API with a custom params validator**
+    - Added logic to validate currency and balance before performing transfer
 
 ### Section 3: Deploying the application to production [Docker + Kubernetes + AWS]
 

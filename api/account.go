@@ -75,7 +75,7 @@ func (server *Server) getAccount(ctx *gin.Context) {
 // CreateAccountRequest defines the request payload for createAccount handler
 type CreateAccountRequest struct {
 	Owner    string `json:"owner" binding:"required"`
-	Currency string `json:"currency" binding:"required,oneof=USD EUR CAD"`
+	Currency string `json:"currency" binding:"required,currency"`
 }
 
 // createAccount creates a new account
@@ -100,35 +100,4 @@ func (server *Server) createAccount(ctx *gin.Context) {
 
 	// Return response
 	ctx.JSON(http.StatusOK, account)
-}
-
-// CreateTransferRequest defines the request payload for createTransfer handler
-type CreateTransferRequest struct {
-	FromAccountID int64 `json:"from_account_id" binding:"required,min=1"`
-	ToAccountID   int64 `json:"to_account_id" binding:"required,min=1"`
-	Amount        int64 `json:"amount" binding:"required,min=1"`
-}
-
-// createTransfer creates a new transfer
-func (server *Server) createTransfer(ctx *gin.Context) {
-	// Parse request
-	var req CreateTransferRequest
-	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.JSON(http.StatusBadRequest, errorResponse(err))
-		return
-	}
-
-	// Create a new transfer
-	transfer, err := server.store.CreateTransfer(ctx, db.CreateTransferParams{
-		FromAccountID: req.FromAccountID,
-		ToAccountID:   req.ToAccountID,
-		Amount:        req.Amount,
-	})
-	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
-		return
-	}
-
-	// Return response
-	ctx.JSON(http.StatusOK, transfer)
 }

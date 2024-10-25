@@ -34,6 +34,7 @@ func TestTransferTx(t *testing.T) {
 				FromAccountID: account1.ID,
 				ToAccountID:   account2.ID,
 				Amount:        amount,
+				Currency:      "USD",
 			})
 
 			// Send error and result into their respective channels
@@ -164,6 +165,7 @@ func TestTransferTxDeadlock(t *testing.T) {
 				FromAccountID: fromAccountID,
 				ToAccountID:   toAccountID,
 				Amount:        amount,
+				Currency:      "USD",
 			})
 			errs <- err
 		}()
@@ -180,4 +182,72 @@ func TestTransferTxDeadlock(t *testing.T) {
 	fmt.Println(">> after:", updatedAccount1.Balance, updatedAccount2.Balance)
 	require.Equal(t, account1.Balance, updatedAccount1.Balance)
 	require.Equal(t, account2.Balance, updatedAccount2.Balance)
+}
+
+func TestValidateAccount(t *testing.T) {
+	// Create a random account with a specific currency
+	account := createRandomAccount(t)
+	account.Currency = "USD"
+	account.Balance = 100
+
+	tests := []struct {
+		name          string
+		accountID     int64
+		currency      string
+		amount        int64
+		checkBalance  bool
+		expectedError string
+	}{
+		{
+			name:          "ValidAccount",
+			accountID:     account.ID,
+			currency:      "USD",
+			amount:        50,
+			checkBalance:  true,
+			expectedError: "",
+		},
+		{
+			name:          "AccountNotFound",
+			accountID:     -1,
+			currency:      "USD",
+			amount:        50,
+			checkBalance:  true,
+			expectedError: "account [-1] not found",
+		},
+		{
+			name:          "CurrencyMismatch",
+			accountID:     account.ID,
+			currency:      "EUR",
+			amount:        50,
+			checkBalance:  true,
+			expectedError: fmt.Sprintf("account [%d] currency mismatch: USD vs EUR", account.ID),
+		},
+		{
+			name:          "InsufficientBalance",
+			accountID:     account.ID,
+			currency:      "USD",
+			amount:        150,
+			checkBalance:  true,
+			expectedError: fmt.Sprintf("account [%d] has insufficient balance", account.ID),
+		},
+		{
+			name:          "NoBalanceCheck",
+			accountID:     account.ID,
+			currency:      "USD",
+			amount:        150,
+			checkBalance:  false,
+			expectedError: "",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := validateAccount(context.Background(), testQueries, tt.accountID, tt.currency, tt.amount, tt.checkBalance)
+			if tt.expectedError == "" {
+				require.NoError(t, err)
+			} else {
+				require.EqualError(t, err, tt.expectedError)
+			}
+		})
+	}
 }

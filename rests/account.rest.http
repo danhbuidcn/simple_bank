@@ -9,12 +9,12 @@ POST {{baseUrl}}/accounts
 Content-Type: application/json
 
 {
-    "owner": "John Doe",
-    "currency": "USD"
+    "owner": "John Doe 4",
+    "currency": "CAD"
 }
 
 ### Get Account
-GET {{baseUrl}}/accounts/10
+GET {{baseUrl}}/accounts/147
 
 ### List Accounts
 GET http://localhost:8081/accounts?page_id=1&page_size=10
@@ -24,7 +24,8 @@ POST {{baseUrl}}/transfers
 Content-Type: application/json
 
 {
-    "from_account_id": 1,
-    "to_account_id": 2,
-    "amount": 100
+    "from_account_id": 146,
+    "to_account_id": 147,
+    "amount": 10,
+    "currency": "USD"
 }

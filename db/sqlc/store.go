@@ -28,26 +28,30 @@ func NewStore(db *sql.DB) Store {
 
 // ExecTx executes a function within a database transaction
 func (store *SQLStore) execTx(ctx context.Context, fn func(*Queries) error) error {
+	// Start a new transaction
 	tx, err := store.db.BeginTx(ctx, nil)
 	if err != nil {
 		return err
 	}
-	q := New(tx)
-	err = fn(q)
+	q := New(tx) // Create a new Queries instance with the transaction
+	err = fn(q)  // Execute the function with the Queries instance
 	if err != nil {
+		// Rollback the transaction if an error occurred
 		if rbErr := tx.Rollback(); rbErr != nil {
 			return fmt.Errorf("tx err: %v, rb err: %v", err, rbErr)
 		}
 		return err
 	}
+	// Commit the transaction if no error occurred
 	return tx.Commit()
 }
 
 // TransferTxParams contains the input parameters of the transfer transaction
 type TransferTxParams struct {
-	FromAccountID int64 `json:"from_account_id"`
-	ToAccountID   int64 `json:"to_account_id"`
-	Amount        int64 `json:"amount"`
+	FromAccountID int64  `json:"from_account_id"`
+	ToAccountID   int64  `json:"to_account_id"`
+	Amount        int64  `json:"amount"`
+	Currency      string `json:"currency"`
 }
 
 // TransferTxResult is the result of the transfer transaction
@@ -59,15 +63,26 @@ type TransferTxResult struct {
 	ToEntry     Entry    `json:"to_entry"`
 }
 
-// TransferTx performs a money transfer from one account to the other.
-// It creates the transfer, add account entries, and update accounts' balance within a database transaction
+// TransferTx performs a money transfer from one account to another
+// It creates a transfer record, add account entries, and update accounts' balance within a single database transaction
 func (store *SQLStore) TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error) {
 	var result TransferTxResult
 
+	// Execute the transfer transaction
 	err := store.execTx(ctx, func(q *Queries) error {
 		var err error
 
-		// Create a transfer record
+		// Validate from account
+		if err := validateAccount(ctx, q, arg.FromAccountID, arg.Currency, arg.Amount, true); err != nil {
+			return err
+		}
+
+		// Validate to account
+		if err := validateAccount(ctx, q, arg.ToAccountID, arg.Currency, 0, false); err != nil {
+			return err
+		}
+
+		// Create transfer record
 		result.Transfer, err = q.CreateTransfer(ctx, CreateTransferParams{
 			FromAccountID: arg.FromAccountID,
 			ToAccountID:   arg.ToAccountID,
@@ -77,7 +92,7 @@ func (store *SQLStore) TransferTx(ctx context.Context, arg TransferTxParams) (Tr
 			return err
 		}
 
-		// Create an entry for the from account (decrease the balance)
+		// Create from account entry
 		result.FromEntry, err = q.CreateEntry(ctx, CreateEntryParams{
 			AccountID: arg.FromAccountID,
 			Amount:    -arg.Amount,
@@ -86,7 +101,7 @@ func (store *SQLStore) TransferTx(ctx context.Context, arg TransferTxParams) (Tr
 			return err
 		}
 
-		// Create an entry for the to account (increase the balance)
+		// Create to account entry
 		result.ToEntry, err = q.CreateEntry(ctx, CreateEntryParams{
 			AccountID: arg.ToAccountID,
 			Amount:    arg.Amount,
@@ -112,6 +127,30 @@ func (store *SQLStore) TransferTx(ctx context.Context, arg TransferTxParams) (Tr
 	})
 
 	return result, err
+}
+
+// validateAccount checks if the account exists and has the correct currency and sufficient balance if needed
+func validateAccount(ctx context.Context, q *Queries, accountID int64, currency string, amount int64, checkBalance bool) error {
+	// Check if the account exists
+	account, err := q.GetAccount(ctx, accountID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return fmt.Errorf("account [%d] not found", accountID)
+		}
+		return err
+	}
+
+	// Check if the account currency matches the transfer currency
+	if account.Currency != currency {
+		return fmt.Errorf("account [%d] currency mismatch: %s vs %s", accountID, account.Currency, currency)
+	}
+
+	// Check if the account has sufficient balance if needed
+	if checkBalance && account.Balance < amount {
+		return fmt.Errorf("account [%d] has insufficient balance", accountID)
+	}
+
+	return nil
 }
 
 // Helper function to update account balances in a consistent order
