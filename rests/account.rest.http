@@ -9,8 +9,8 @@ POST {{baseUrl}}/accounts
 Content-Type: application/json
 
 {
-    "owner": "John Doe 4",
-    "currency": "CAD"
+    "owner": "hsykyh",
+    "currency": "EUR"
 }
 
 ### Get Account

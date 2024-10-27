@@ -151,6 +151,15 @@ This project is designed to be comprehensive, allowing even those with little pr
       ```
   - **feat: run the application with air when the container starts**
     - Configured air to watch for changes and reload the application
+  - **feat: how to handle DB errors in Golang correctly**
+    - Command
+    ```
+      docker exec -it go_app /bin/sh
+
+      sqlc generate
+      make mock
+      make test
+    ```
 
 ### Section 3: Deploying the application to production [Docker + Kubernetes + AWS]
 

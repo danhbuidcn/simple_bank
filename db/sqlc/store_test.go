@@ -8,13 +8,20 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+// createRandomAccount creates a random account for testing
 func TestTransferTx(t *testing.T) {
 	// Initialize a new store with a test database connection
 	store := NewStore(testDB)
 
-	// Create two random accounts for the transfer
-	account1 := createRandomAccount(t)
-	account2 := createRandomAccount(t)
+	// Create two accounts with a balance of 100 USD each
+	account1 := createRandomAccountWithArgs(t, CreateAccountParams{
+		Balance:  100,
+		Currency: "USD",
+	})
+	account2 := createRandomAccountWithArgs(t, CreateAccountParams{
+		Balance:  100,
+		Currency: "USD",
+	})
 	fmt.Println(">> before:", account1.Balance, account2.Balance)
 
 	// Number of concurrent transfer transactions
@@ -145,21 +152,37 @@ func TestTransferTx(t *testing.T) {
 	require.Equal(t, account2.Balance+int64(n)*amount, updatedAccount2.Balance)
 }
 
+// TestTransferTxDeadlock tests the transfer transaction function for deadlock scenarios
 func TestTransferTxDeadlock(t *testing.T) {
+	// Initialize a new store with a test database connection
 	store := NewStore(testDB)
-	account1 := createRandomAccount(t)
-	account2 := createRandomAccount(t)
+	// Create two accounts with a balance of 100 USD each
+	account1 := createRandomAccountWithArgs(t, CreateAccountParams{
+		Balance:  100,
+		Currency: "USD",
+	})
+	account2 := createRandomAccountWithArgs(t, CreateAccountParams{
+		Balance:  100,
+		Currency: "USD",
+	})
+
 	fmt.Println(">> before:", account1.Balance, account2.Balance)
-	n := 10
-	amount := int64(10)
-	errs := make(chan error)
+	n := 10                  // Number of concurrent transfer transactions
+	amount := int64(10)      // Amount to be transferred in each transaction
+	errs := make(chan error) // Create channels to receive errors from goroutines
+
+	// Execute n concurrent transfer transactions
 	for i := 0; i < n; i++ {
-		fromAccountID := account1.ID
-		toAccountID := account2.ID
+		fromAccountID := account1.ID // Sender's account ID
+		toAccountID := account2.ID   // Receiver's account ID
+
+		// If i is odd, swap the sender and receiver
 		if i%2 == 1 {
 			fromAccountID = account2.ID
 			toAccountID = account1.ID
 		}
+
+		// Execute the transfer transaction in a goroutine
 		go func() {
 			_, err := store.TransferTx(context.Background(), TransferTxParams{
 				FromAccountID: fromAccountID,
@@ -170,10 +193,13 @@ func TestTransferTxDeadlock(t *testing.T) {
 			errs <- err
 		}()
 	}
+
+	// Receive errors from the transactions
 	for i := 0; i < n; i++ {
 		err := <-errs
 		require.NoError(t, err)
 	}
+
 	// check the final updated balance
 	updatedAccount1, err := store.GetAccount(context.Background(), account1.ID)
 	require.NoError(t, err)
@@ -184,11 +210,13 @@ func TestTransferTxDeadlock(t *testing.T) {
 	require.Equal(t, account2.Balance, updatedAccount2.Balance)
 }
 
+// TestTransferTxDeadlock tests the transfer transaction function for deadlock scenarios
 func TestValidateAccount(t *testing.T) {
 	// Create a random account with a specific currency
-	account := createRandomAccount(t)
-	account.Currency = "USD"
-	account.Balance = 100
+	account := createRandomAccountWithArgs(t, CreateAccountParams{
+		Currency: "USD",
+		Balance:  100,
+	})
 
 	tests := []struct {
 		name          string
@@ -226,7 +254,7 @@ func TestValidateAccount(t *testing.T) {
 			name:          "InsufficientBalance",
 			accountID:     account.ID,
 			currency:      "USD",
-			amount:        150,
+			amount:        1500,
 			checkBalance:  true,
 			expectedError: fmt.Sprintf("account [%d] has insufficient balance", account.ID),
 		},
@@ -240,8 +268,10 @@ func TestValidateAccount(t *testing.T) {
 		},
 	}
 
+	// Iterate over the test cases
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			// Call the validateAccount function with the test case parameters
 			err := validateAccount(context.Background(), testQueries, tt.accountID, tt.currency, tt.amount, tt.checkBalance)
 			if tt.expectedError == "" {
 				require.NoError(t, err)
