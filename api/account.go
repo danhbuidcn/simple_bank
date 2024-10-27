@@ -96,6 +96,7 @@ func (server *Server) createAccount(ctx *gin.Context) {
 	})
 	if err != nil {
 		if pqErr, ok := err.(*pq.Error); ok {
+			// Check if the error is a foreign key violation or unique violation
 			switch pqErr.Code.Name() {
 			case "foreign_key_violation", "unique_violation":
 				ctx.JSON(http.StatusForbidden, errorResponse(err))

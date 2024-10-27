@@ -29,3 +29,17 @@ Content-Type: application/json
     "amount": 10,
     "currency": "USD"
 }
+
+### Create User
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+    "username": "lamxx",
+    "full_name": "Huseyin Yilmaz",
+    "password": "123458",
+    "email": "lamxx@gmail.com"
+}
+
+### Get User
+GET {{baseUrl}}/users/hsykyh

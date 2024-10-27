@@ -97,61 +97,61 @@ This project is designed to be comprehensive, allowing even those with little pr
 ## Commit History
 
 ### Section 1: Working with database [Postgres + SQLC]
-  - **feat: initialize project and connect db**: 
+  - [feat: initialize project and connect db](https://github.com/danhbuidcn/simple_bank/commit/1e0ff18)
     - Initialized the project structure.
     - Connected to the database using Docker for containerization.
 
-  - **feat: setup sqlc and implement CRUD with sqlc**: 
+  - [feat: setup sqlc and implement CRUD with sqlc](https://github.com/danhbuidcn/simple_bank/commit/7e765d2)
     - Set up sqlc for generating Go code from SQL queries.
     - Implemented CRUD operations using sqlc.
 
-  - **feat: add comprehensive tests for account operations**: 
+  - [feat: add comprehensive tests for account operations](https://github.com/danhbuidcn/simple_bank/commit/28aefcf)
     - Wrote extensive tests for various account operations to ensure reliability.
 
-  - **feat: add comprehensive tests for account operations**: 
+  - [feat: add comprehensive tests for account operations](https://github.com/danhbuidcn/simple_bank/commit/81a864d)
     - Added more comprehensive tests for account operations.
 
-  - **feat: add CRUD entry and transfer**: 
+  - [feat: add CRUD entry and transfer](https://github.com/danhbuidcn/simple_bank/commit/4a33824)
     - Added Create, Read, Update, Delete (CRUD) operations for entries and transfers.
 
-  - **feat: implement database transaction, transfers transaction**: 
+  - [feat: implement database transaction, transfers transaction](https://github.com/danhbuidcn/simple_bank/commit/4ab5362)
     - Implemented database transactions.
     - Implemented transfer transactions.
 
-  - **feat: eliminate duplicate code and handle deadlocks**: 
+  - [feat: eliminate duplicate code and handle deadlocks](https://github.com/danhbuidcn/simple_bank/commit/6bf08d8)
     - Removed duplicate code.
     - Added handling for database deadlocks.
 
-  - **docs: deeply understand transaction isolation levels & read phenomena**: 
+  - [docs: deeply understand transaction isolation levels & read phenomena](https://github.com/danhbuidcn/simple_bank/commit/4cbca31)
     - Added documentation to deeply understand transaction isolation levels.
     - Explained read phenomena.
 
-  - **feat: setup github actions for project**: 
+  - [feat: setup github actions for project](https://github.com/danhbuidcn/simple_bank/commit/5768479)
     - Set up GitHub Actions for continuous integration and deployment.
 
 ### Section 2: Building RESTful HTTP JSON API [Gin + JWT + PASETO]
-  - **feat: implement RESTful HTTP API in go using Gin**
+  - [feat: implement RESTful HTTP API in go using Gin](https://github.com/danhbuidcn/simple_bank/commit/4fd7e4e)
     - Developed RESTful HTTP APIs using the Gin framework.
     - Implemented endpoints for creating accounts.
-  - **feat: load config from file & environment variables with viper**
+  - [feat: load config from file & environment variables with viper](https://github.com/danhbuidcn/simple_bank/commit/ab9d2b4)
     - [viper](https://github.com/spf13/viper)
     - Load config from `util/config.go` by viper
-  - **feat: mock DB for testing HTTP API in Go and achieve 100% coverage** (use [gomock](https://github.com/golang/mock))
+  - [feat: mock DB for testing HTTP API in Go and achieve 100% coverage](https://github.com/danhbuidcn/simple_bank/commit/225a0f2)
     - Isolate tests data to avoid conflicts
     - Reduce a lot of time talking to the database
     - Easy setup edge cases: unexpected errors
-    - Command: `make mock`
-  - **feat: implement transfer money API with a custom params validator**
+    - Command: `make mock` : [gomock](https://github.com/golang/mock)
+  - [feat: implement transfer money API with a custom params validator](https://github.com/danhbuidcn/simple_bank/commit/f81ed2c)
     - Added logic to validate currency and balance before performing transfer
-  - **feat: add users table with unique & foreign key constraints in PostgreSQL**
+  - [feat: add users table with unique & foreign key constraints in PostgreSQL](https://github.com/danhbuidcn/simple_bank/commit/f8470a3)
     - Command
       ```bash
       docker exec -it go_app /bin/sh
       # migrate create -ext sql -dir db/migration -seq add_users
       ```
-  - **feat: run the application with air when the container starts**
+  - [feat: run the application with air when the container starts](https://github.com/danhbuidcn/simple_bank/commit/d421c1a)
     - Configured air to watch for changes and reload the application
-  - **feat: how to handle DB errors in Golang correctly**
+  - [feat: how to handle DB errors in Golang correctly](https://github.com/danhbuidcn/simple_bank/commit/e7acfea)
     - Command
     ```
       docker exec -it go_app /bin/sh
@@ -160,6 +160,7 @@ This project is designed to be comprehensive, allowing even those with little pr
       make mock
       make test
     ```
+  - [feat: how to securely store passwords? Hash password in Go with Bcrypt!](https://github.com/danhbuidcn/simple_bank/commit/7d37b8a)
 
 ### Section 3: Deploying the application to production [Docker + Kubernetes + AWS]
 
