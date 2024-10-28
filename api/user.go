@@ -5,18 +5,30 @@ import (
 	"net/http"
 	db "simple_bank/db/sqlc"
 	"simple_bank/util"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/lib/pq"
 )
 
-// createUserResponse represents the response of createUser handler
-type createUserResponse struct {
-	Username          string `json:"username"`
-	FullName          string `json:"full_name"`
-	Email             string `json:"email"`
-	PasswordChangedAt string `json:"password_changed_at"`
-	CreatedAt         string `json:"created_at"`
+// userResponse represents the response of getUser handler
+type userResponse struct {
+	Username          string    `json:"username"`
+	FullName          string    `json:"full_name"`
+	Email             string    `json:"email"`
+	PasswordChangedAt time.Time `json:"password_changed_at"`
+	CreatedAt         time.Time `json:"created_at"`
+}
+
+// newUserResponse creates a new userResponse
+func newUserResponse(user db.User) userResponse {
+	return userResponse{
+		Username:          user.Username,
+		FullName:          user.FullName,
+		Email:             user.Email,
+		PasswordChangedAt: user.PasswordChangedAt,
+		CreatedAt:         user.CreatedAt,
+	}
 }
 
 // GetUserRequest defines the request payload for getUser handler
@@ -46,13 +58,7 @@ func (server *Server) getUser(ctx *gin.Context) {
 	}
 
 	// Return response
-	ctx.JSON(http.StatusOK, createUserResponse{
-		Username:          user.Username,
-		FullName:          user.FullName,
-		Email:             user.Email,
-		PasswordChangedAt: user.PasswordChangedAt.String(),
-		CreatedAt:         user.CreatedAt.String(),
-	})
+	ctx.JSON(http.StatusOK, newUserResponse(user))
 }
 
 // CreateUserRequest defines the request payload for createUser handler
@@ -100,11 +106,5 @@ func (server *Server) createUser(ctx *gin.Context) {
 	}
 
 	// Return response
-	ctx.JSON(http.StatusOK, createUserResponse{
-		Username:          user.Username,
-		FullName:          user.FullName,
-		Email:             user.Email,
-		PasswordChangedAt: user.PasswordChangedAt.String(),
-		CreatedAt:         user.CreatedAt.String(),
-	})
+	ctx.JSON(http.StatusOK, newUserResponse(user))
 }

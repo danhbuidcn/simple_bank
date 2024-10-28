@@ -360,16 +360,6 @@ func TestCreateAccountAPI(t *testing.T) {
 	}
 }
 
-func requireBodyMatchTransfer(t *testing.T, body *bytes.Buffer, transfer db.Transfer) {
-	data, err := io.ReadAll(body)
-	require.NoError(t, err)
-
-	var gotTransfer db.Transfer
-	err = json.Unmarshal(data, &gotTransfer)
-	require.NoError(t, err)
-	require.Equal(t, transfer, gotTransfer)
-}
-
 func requireBodyMatchAccount(t *testing.T, body *bytes.Buffer, account db.Account) {
 	data, err := io.ReadAll(body)
 	require.NoError(t, err)
