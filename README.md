@@ -176,6 +176,12 @@ This project is designed to be comprehensive, allowing even those with little pr
   - [feat #19: why PASETO is better than JWT for token-based authentication?](/docs/presentation/19-presentation-paseto-vs-jwt.pdf)
 
   - [feat #20: how to create and verify JWT & PASETO token in Golang](https://github.com/danhbuidcn/simple_bank/commit/)
+    - Command:
+      ```
+      go get github.com/google/uuid
+      go get github.com/golang-jwt/jwt
+      go get github.com/o1egl/paseto
+      ```
 
   - [feat #21: Implement login user API that returns PASETO or JWT access token in Go](https://github.com/danhbuidcn/simple_bank/commit/)
   
