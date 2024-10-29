@@ -183,7 +183,7 @@ This project is designed to be comprehensive, allowing even those with little pr
       go get github.com/o1egl/paseto
       ```
 
-  - [feat #21: Implement login user API that returns PASETO or JWT access token in Go](https://github.com/danhbuidcn/simple_bank/commit/)
+  - [feat #21: implement login user API that returns PASETO or JWT access token in Go](https://github.com/danhbuidcn/simple_bank/commit/)
   
   - [feat #22: Implement authentication middleware and authorization rules in Golang using Gin](https://github.com/danhbuidcn/simple_bank/commit/)
 

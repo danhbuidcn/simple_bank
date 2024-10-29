@@ -1,0 +1,12 @@
+@baseUrl=http://127.0.0.1:8081
+
+### Create Transfers
+POST {{baseUrl}}/transfers
+Content-Type: application/json
+
+{
+    "from_account_id": 146,
+    "to_account_id": 147,
+    "amount": 10,
+    "currency": "USD"
+}

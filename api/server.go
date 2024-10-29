@@ -1,8 +1,11 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
 	db "simple_bank/db/sqlc"
+	"simple_bank/token"
+	"simple_bank/util"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -11,19 +14,43 @@ import (
 
 // Server is the main struct for the API server
 type Server struct {
-	store  db.Store
-	router *gin.Engine
+	config     util.Config
+	store      db.Store
+	tokenMaker token.Maker
+	router     *gin.Engine
 }
 
 // NewServer creates a new HTTP server and sets up routing
-func NewServer(store db.Store) *Server {
-	server := &Server{store: store}
-	router := gin.Default()
-	router.SetTrustedProxies(nil)
+func NewServer(config util.Config, store db.Store) (*Server, error) {
+	// Create a new token maker
+	tokenMaker, err := token.NewPasetoMaker(config.TokenSymmetricKey)
+	// tokenMaker, err := token.NewJWTMaker(config.TokenSymmetricKey)
+	if err != nil {
+		return nil, fmt.Errorf("cannot create token maker: %w", err)
+	}
 
+	// Create a new server
+	server := &Server{
+		config:     config,
+		store:      store,
+		tokenMaker: tokenMaker,
+	}
+
+	// Register custom validator for currency
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
 		v.RegisterValidation("currency", validCurrency)
 	}
+
+	// Setup routing
+	server.setupRouter()
+
+	return server, nil
+}
+
+func (server *Server) setupRouter() {
+	// Create a new gin router
+	router := gin.Default()
+	router.SetTrustedProxies(nil)
 
 	// Define routing
 	router.GET("/health", server.healthCheck)
@@ -39,9 +66,9 @@ func NewServer(store db.Store) *Server {
 	// Define routing for users
 	router.POST("/users", server.createUser)
 	router.GET("/users/:username", server.getUser)
+	router.POST("/users/login", server.loginUser)
 
 	server.router = router
-	return server
 }
 
 // Start runs the HTTP server on a specific address

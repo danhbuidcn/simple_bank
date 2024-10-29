@@ -129,6 +129,7 @@ func (store *SQLStore) TransferTx(ctx context.Context, arg TransferTxParams) (Tr
 	return result, err
 }
 
+// TODO: move this function to a separate file
 // validateAccount checks if the account exists and has the correct currency and sufficient balance if needed
 func validateAccount(ctx context.Context, q *Queries, accountID int64, currency string, amount int64, checkBalance bool) error {
 	// Check if the account exists

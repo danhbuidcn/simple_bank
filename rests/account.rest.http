@@ -18,28 +18,3 @@ GET {{baseUrl}}/accounts/147
 
 ### List Accounts
 GET http://localhost:8081/accounts?page_id=1&page_size=10
-
-### Create Transfers
-POST {{baseUrl}}/transfers
-Content-Type: application/json
-
-{
-    "from_account_id": 146,
-    "to_account_id": 147,
-    "amount": 10,
-    "currency": "USD"
-}
-
-### Create User
-POST {{baseUrl}}/users
-Content-Type: application/json
-
-{
-    "username": "lamxx",
-    "full_name": "Huseyin Yilmaz",
-    "password": "123458",
-    "email": "lamxx@gmail.com"
-}
-
-### Get User
-GET {{baseUrl}}/users/hsykyh

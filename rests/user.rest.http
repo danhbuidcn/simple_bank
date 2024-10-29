@@ -1,0 +1,25 @@
+
+@baseUrl=http://127.0.0.1:8081
+
+### Create User
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+    "username": "lamxx",
+    "full_name": "Huseyin Yilmaz",
+    "password": "123458",
+    "email": "lamxx@gmail.com"
+}
+
+### Get User
+GET {{baseUrl}}/users/hsykyh
+
+### Login User
+POST {{baseUrl}}/users/login
+Content-Type: application/json
+
+{
+    "username": "lamxx",
+    "password": "123458"
+}
