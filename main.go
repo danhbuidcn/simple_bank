@@ -31,7 +31,6 @@ func main() {
 	// Create database store
 	store := db.NewStore(conn)
 	log.Println("=======================> Database store created successfully")
-	log.Println("=======================> Server started successfully", config.TokenSymmetricKey)
 
 	// Create API server
 	server, error := api.NewServer(config, store)

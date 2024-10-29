@@ -3,10 +3,11 @@
 ### Create Transfers
 POST {{baseUrl}}/transfers
 Content-Type: application/json
+Authorization: bearer v2.local.5SSRBM8qpLfYlKr9QWqy6epPpgdxcSl4ozM2naHn9f0a1c9WsACaC4PaPCVYBfsRBYvrdOw9pAccBkT-Oq7CrYMQhTkLsAF86towoQzFaSy6AoF94GX4TaIV9xO1HBAMi6RVWjeosh04301vG4hd81GkhRYkDiGgblaca2eKxur6LVABySzzN7EZjrHeLjNB2F_Wv18u3gLkTfF_9sDPZ86VdUhMgS5XMuritRfD_dvLc2n7OrScZqOAG7EzMB0G.bnVsbA
 
 {
-    "from_account_id": 146,
-    "to_account_id": 147,
+    "from_account_id": 1,
+    "to_account_id": 2,
     "amount": 10,
-    "currency": "USD"
+    "currency": "EUR"
 }

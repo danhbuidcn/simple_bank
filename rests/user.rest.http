@@ -13,7 +13,7 @@ Content-Type: application/json
 }
 
 ### Get User
-GET {{baseUrl}}/users/hsykyh
+GET {{baseUrl}}/users/lamxx
 
 ### Login User
 POST {{baseUrl}}/users/login
