@@ -7,14 +7,19 @@ GET {{baseUrl}}/health
 ### Create Account
 POST {{baseUrl}}/accounts
 Content-Type: application/json
+Authorization: bearer v2.local.5SSRBM8qpLfYlKr9QWqy6epPpgdxcSl4ozM2naHn9f0a1c9WsACaC4PaPCVYBfsRBYvrdOw9pAccBkT-Oq7CrYMQhTkLsAF86towoQzFaSy6AoF94GX4TaIV9xO1HBAMi6RVWjeosh04301vG4hd81GkhRYkDiGgblaca2eKxur6LVABySzzN7EZjrHeLjNB2F_Wv18u3gLkTfF_9sDPZ86VdUhMgS5XMuritRfD_dvLc2n7OrScZqOAG7EzMB0G.bnVsbA
 
 {
     "owner": "hsykyh",
     "currency": "EUR"
 }
 
+
 ### Get Account
-GET {{baseUrl}}/accounts/147
+GET {{baseUrl}}/accounts/23
+Authorization: bearer v2.local.5SSRBM8qpLfYlKr9QWqy6epPpgdxcSl4ozM2naHn9f0a1c9WsACaC4PaPCVYBfsRBYvrdOw9pAccBkT-Oq7CrYMQhTkLsAF86towoQzFaSy6AoF94GX4TaIV9xO1HBAMi6RVWjeosh04301vG4hd81GkhRYkDiGgblaca2eKxur6LVABySzzN7EZjrHeLjNB2F_Wv18u3gLkTfF_9sDPZ86VdUhMgS5XMuritRfD_dvLc2n7OrScZqOAG7EzMB0G.bnVsbA
+
 
 ### List Accounts
 GET http://localhost:8081/accounts?page_id=1&page_size=10
+Authorization: bearer v2.local.5SSRBM8qpLfYlKr9QWqy6epPpgdxcSl4ozM2naHn9f0a1c9WsACaC4PaPCVYBfsRBYvrdOw9pAccBkT-Oq7CrYMQhTkLsAF86towoQzFaSy6AoF94GX4TaIV9xO1HBAMi6RVWjeosh04301vG4hd81GkhRYkDiGgblaca2eKxur6LVABySzzN7EZjrHeLjNB2F_Wv18u3gLkTfF_9sDPZ86VdUhMgS5XMuritRfD_dvLc2n7OrScZqOAG7EzMB0G.bnVsbA

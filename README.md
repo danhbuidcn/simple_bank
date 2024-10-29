@@ -46,11 +46,12 @@ This project is designed to be comprehensive, allowing even those with little pr
   ```
   cp .env.sample .env
   docker-compose up --build
+  docker ps --filter "name=simplebank"
   ```
 
 - Migrate db
   ```
-  docker exec -it go_app /bin/sh
+  docker exec -it simplebank_app /bin/sh
   # make createdb
   # make migrateup
   # make test
@@ -65,13 +66,14 @@ This project is designed to be comprehensive, allowing even those with little pr
 ##  Install package
 
 ```
-  docker exec -it go_app /bin/sh
+  docker exec -it simplebank_app /bin/sh
   # go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
   # go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
   # go get -u github.com/gin-gonic/gin
   # go get github.com/spf13/viper
   # go install github.com/golang/mock/mockgen@v1.6.0
   # go get github.com/golang/mock/gomock
+  # go install github.com/go-delve/delve/cmd/dlv@latest
 ```
 
 ### golang-migrate
@@ -84,10 +86,11 @@ This project is designed to be comprehensive, allowing even those with little pr
 - You can also use [gorm](https://gorm.io/docs/) instead.
 
 ```
-  docker exec -it go_app /bin/sh
+  docker exec -it simplebank_app /bin/sh
 
   sqlc version
   sqlc generate
+  make mock // run install mockgen, gomock if error
 ```
 
 ### testify
@@ -152,7 +155,7 @@ This project is designed to be comprehensive, allowing even those with little pr
   - [feat #14: add users table with unique & foreign key constraints in PostgreSQL](https://github.com/danhbuidcn/simple_bank/commit/f8470a3)
     - Command
       ```bash
-      docker exec -it go_app /bin/sh
+      docker exec -it simplebank_app /bin/sh
       # migrate create -ext sql -dir db/migration -seq add_users
       ```
 
@@ -162,20 +165,20 @@ This project is designed to be comprehensive, allowing even those with little pr
   - [feat #16: how to handle DB errors in Golang correctly](https://github.com/danhbuidcn/simple_bank/commit/e7acfea)
     - Command
     ```
-      docker exec -it go_app /bin/sh
+      docker exec -it simplebank_app /bin/sh
 
       sqlc generate
       make mock
       make test
     ```
 
-  - [feat #17: how to securely store passwords? Hash password in Go with Bcrypt!](https://github.com/danhbuidcn/simple_bank/commit/7d37b8a)
+  - [feat #17: how to securely store passwords? Hash password in Go with Bcrypt!](https://github.com/danhbuidcn/simple_bank/commit/d203da8)
 
-  - [feat #18: how to write stronger unit tests with a custom gomock matcher](https://github.com/danhbuidcn/simple_bank/commit/3aac490)
+  - [feat #18: how to write stronger unit tests with a custom gomock matcher](https://github.com/danhbuidcn/simple_bank/commit/c0d8db6)
 
   - [feat #19: why PASETO is better than JWT for token-based authentication?](/docs/presentation/19-presentation-paseto-vs-jwt.pdf)
 
-  - [feat #20: how to create and verify JWT & PASETO token in Golang](https://github.com/danhbuidcn/simple_bank/commit/)
+  - [feat #20: how to create and verify JWT & PASETO token in Golang](https://github.com/danhbuidcn/simple_bank/commit/1519fcb)
     - Command:
       ```
       go get github.com/google/uuid
@@ -183,11 +186,39 @@ This project is designed to be comprehensive, allowing even those with little pr
       go get github.com/o1egl/paseto
       ```
 
-  - [feat #21: implement login user API that returns PASETO or JWT access token in Go](https://github.com/danhbuidcn/simple_bank/commit/)
+  - [feat #21: implement login user API that returns PASETO or JWT access token in Go](https://github.com/danhbuidcn/simple_bank/commit/a1d0147)
   
-  - [feat #22: Implement authentication middleware and authorization rules in Golang using Gin](https://github.com/danhbuidcn/simple_bank/commit/)
+  - [feat #22: implement authentication middleware and authorization rules in Golang using Gin](https://github.com/danhbuidcn/simple_bank/commit/295d784)
 
 ### Section 3: Deploying the application to production [Docker + Kubernetes + AWS]
+
+  - `feat #23: Build a minimal Golang Docker image with a multistage Dockerfile`
+
+  - `feat #24: How to use docker network to connect 2 stand-alone containers`
+
+  - `feat #25: How to write docker-compose file and control service start-up orders with wait-for.sh`
+
+  - `feat #26: How to create a free tier AWS account`
+
+  - `feat #27: Auto build & push docker image to AWS ECR with Github Actions`
+
+  - `feat #28: How to create a production DB on AWS RDS`
+
+  - `feat #29: Store & retrieve production secrets with AWS secrets manager`
+
+  - `feat #30: Kubernetes architecture & How to create an EKS cluster on AWS`
+
+  - `feat #31: How to use kubectl & k9s to connect to a kubernetes cluster on AWS EKS`
+
+  - `feat #32: How to deploy a web app to Kubernetes cluster on AWS EKS`
+
+  - `feat #33: Register a domain name & set up A-record using Route53`
+
+  - `feat #34: How to use Ingress to route traffics to different services in Kubernetes`
+
+  - `feat #35: Automatic issue TLS certificates in Kubernetes with Let's Encrypt`
+
+  - `feat #36: Automatic deploy to Kubernetes with Github Action`
 
 ### Section 4: Advance backend topics [Sessions + gRPC]
 

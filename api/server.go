@@ -55,18 +55,23 @@ func (server *Server) setupRouter() {
 	// Define routing
 	router.GET("/health", server.healthCheck)
 
-	// Define routing for accounts
-	router.POST("/accounts", server.createAccount)
-	router.GET("/accounts/:id", server.getAccount)
-	router.GET("/accounts", server.listAccounts)
-
-	// Define routing for transfers
-	router.POST("/transfers", server.createTransfer)
-
 	// Define routing for users
 	router.POST("/users", server.createUser)
 	router.GET("/users/:username", server.getUser)
+
+	// Define routing for login
 	router.POST("/users/login", server.loginUser)
+
+	// Create a new group for authenticated routes
+	authRouters := router.Group("/").Use(authMiddleware(server.tokenMaker))
+
+	// Define routing for accounts
+	authRouters.POST("/accounts", server.createAccount)
+	authRouters.GET("/accounts/:id", server.getAccount)
+	authRouters.GET("/accounts", server.listAccounts)
+
+	// Define routing for transfers
+	authRouters.POST("/transfers", server.createTransfer)
 
 	server.router = router
 }

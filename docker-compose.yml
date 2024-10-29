@@ -3,7 +3,7 @@ version: '3.8'
 services:
   db:
     image: postgres:15
-    container_name: postgres_db
+    container_name: simplebank_db
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -15,7 +15,7 @@ services:
 
   app:
     build: .
-    container_name: go_app
+    container_name: simplebank_app
     env_file:
       - .env
     ports:

@@ -72,16 +72,6 @@ func (store *SQLStore) TransferTx(ctx context.Context, arg TransferTxParams) (Tr
 	err := store.execTx(ctx, func(q *Queries) error {
 		var err error
 
-		// Validate from account
-		if err := validateAccount(ctx, q, arg.FromAccountID, arg.Currency, arg.Amount, true); err != nil {
-			return err
-		}
-
-		// Validate to account
-		if err := validateAccount(ctx, q, arg.ToAccountID, arg.Currency, 0, false); err != nil {
-			return err
-		}
-
 		// Create transfer record
 		result.Transfer, err = q.CreateTransfer(ctx, CreateTransferParams{
 			FromAccountID: arg.FromAccountID,
@@ -127,31 +117,6 @@ func (store *SQLStore) TransferTx(ctx context.Context, arg TransferTxParams) (Tr
 	})
 
 	return result, err
-}
-
-// TODO: move this function to a separate file
-// validateAccount checks if the account exists and has the correct currency and sufficient balance if needed
-func validateAccount(ctx context.Context, q *Queries, accountID int64, currency string, amount int64, checkBalance bool) error {
-	// Check if the account exists
-	account, err := q.GetAccount(ctx, accountID)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			return fmt.Errorf("account [%d] not found", accountID)
-		}
-		return err
-	}
-
-	// Check if the account currency matches the transfer currency
-	if account.Currency != currency {
-		return fmt.Errorf("account [%d] currency mismatch: %s vs %s", accountID, account.Currency, currency)
-	}
-
-	// Check if the account has sufficient balance if needed
-	if checkBalance && account.Balance < amount {
-		return fmt.Errorf("account [%d] has insufficient balance", accountID)
-	}
-
-	return nil
 }
 
 // Helper function to update account balances in a consistent order
