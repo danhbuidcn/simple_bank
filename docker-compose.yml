@@ -22,12 +22,9 @@ services:
       - "${APP_PORT}:8081"
     depends_on:
       - db
-    volumes:
-      - .:/app # Mount the current directory to /app
-      - go_mod_cache:/go/pkg/mod # Cache go modules
     stdin_open: true
     tty: true
+    command: [ "/app/main" ]
 
 volumes:
   db_data:
-  go_mod_cache:
