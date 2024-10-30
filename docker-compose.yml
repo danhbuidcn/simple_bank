@@ -3,7 +3,7 @@ version: '3.8'
 services:
   db:
     image: postgres:15
-    container_name: postgres_db
+    container_name: simplebank_db
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -15,19 +15,16 @@ services:
 
   app:
     build: .
-    container_name: go_app
+    container_name: simplebank_app
     env_file:
       - .env
     ports:
       - "${APP_PORT}:8081"
     depends_on:
       - db
-    volumes:
-      - .:/app # Mount the current directory to /app
-      - go_mod_cache:/go/pkg/mod # Cache go modules
     stdin_open: true
     tty: true
+    command: [ "/app/main" ]
 
 volumes:
   db_data:
-  go_mod_cache:
